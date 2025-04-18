@@ -8,12 +8,19 @@ export const Route = createFileRoute('/')({
 
 function App() {
   return (
-    <div className="flex flex-col justify-center">
-      {Object.keys(levels).map((key) => (
-        <Link key={key} to="/puzzles/$puzzleId" params={{ puzzleId: Number(key) }}>
-          Level {key}
-        </Link>
-      ))}
+    <div className="pt-10 flex justify-center">
+      <ul role="list" className="w-3/4 space-y-3">
+        {Object.keys(levels).map((key) => (
+          <Link
+            key={key}
+            to="/puzzles/$puzzleId"
+            params={{ puzzleId: Number(key) }}
+            className="flex justify-center px-4 py-4 shadow sm:rounded-md sm:px-6"
+          >
+            Level {key}
+          </Link>
+        ))}
+      </ul>
     </div>
   )
 }
