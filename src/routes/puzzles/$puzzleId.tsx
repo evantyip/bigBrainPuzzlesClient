@@ -85,6 +85,10 @@ function RouteComponent() {
     colIndex: number,
     piece: PuzzlePiece,
   ) => {
+    if (piece === undefined) {
+      return false;
+    }
+
     for (const [relRow, relCol] of piece.shape) {
       const newRow = rowIndex + relRow;
       const newCol = colIndex + relCol;
@@ -292,25 +296,27 @@ function RouteComponent() {
         </div>
       </div>
       <div className="w-full justify-center flex flex-row">
-        {renderPiecePreview()}
+        {selectedPiece !== undefined && renderPiecePreview()}
         <div className="p-24 rotate-135">{renderGrid()}</div>
       </div>
-      <div className="xl:absolute xl:bottom-0 xl:w-10/12 overflow-hidden bg-white outline-2 rounded-md">
-        <h3 className="font-medium mb-2">Available Pieces</h3>
-        <ul role="list" className="relative justify-center flex flex-row flex-wrap divide-y divide-x divide-gray-200">
-          {pieces
-            .filter((piece) => piece.id !== selectedPiece.id)
-            .map((piece) => (
-              <li
-                key={piece.color}
-                className="px-6"
-                onClick={() => setSelectedPiece(piece)}
-              >
-                {createPreviewGridForPiece(piece, 6)}
-              </li>
-          ))}
-        </ul>
-      </div>
+      {pieces.length > 1 && (
+        <div className="xl:absolute xl:bottom-0 xl:w-10/12 overflow-hidden bg-white outline-2 rounded-md">
+          <h3 className="font-medium mb-2">Available Pieces</h3>
+          <ul role="list" className="relative justify-center flex flex-row flex-wrap divide-y divide-x divide-gray-200">
+            {pieces
+              .filter((piece) => piece.id !== selectedPiece.id)
+              .map((piece) => (
+                <li
+                  key={piece.color}
+                  className="px-6"
+                  onClick={() => setSelectedPiece(piece)}
+                >
+                  {createPreviewGridForPiece(piece, 6)}
+                </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
