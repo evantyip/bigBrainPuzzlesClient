@@ -198,7 +198,7 @@ function RouteComponent() {
     });
   };
 
-  const createPreviewGridForPiece = (piece: puzzlePiece) => {
+  const createPreviewGridForPiece = (piece: puzzlePiece, size: number = 10) => {
     // Create an empty 5x5 grid for the preview
     const previewGrid = Array(5).fill(0).map(() => Array(5).fill({id: -1} as puzzlePiece));
 
@@ -217,13 +217,13 @@ function RouteComponent() {
     });
 
     return (
-      <div className="rotate-135 py-2">
+      <div className="rotate-135">
         {previewGrid.map((row, i) => (
           <div key={`preview-row-${i}`} className="flex flex-row">
             {row.map((cell, j) => (
               <div
                 key={`piece-preview-${i}-${j}`}
-                className={`w-10 h-10 m-1 rounded-full flex items-center justify-center ${
+                className={`w-${size} h-${size} m-1 rounded-full flex items-center justify-center ${
                   cell.id !== -1 ? cell.color : ""
                 }`}
               >
@@ -237,27 +237,27 @@ function RouteComponent() {
 
   const renderPiecePreview = () => {
     return (
-      <div className="p-4 border rounded-md">
+      <div className="p-4 h-1/5 border rounded-md">
         <h3 className="text-lg font-medium mb-2">Current Piece</h3>
         {createPreviewGridForPiece(selectedPiece)}
         <div className="mt-10 flex gap-2">
           <button
             type="button"
-            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => transformSelectedPiece('rotate')}
           >
             Rotate (R)
           </button>
           <button
             type="button"
-            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => transformSelectedPiece('flipX')}
           >
             Flip X (F)
           </button>
           <button
             type="button"
-            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => transformSelectedPiece('flipY')}
           >
             Flip Y (G)
@@ -268,22 +268,23 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col pt-40 justify-center items-center">
-      <div className="flex flex-row">
+    <div className="static pt-10 flex flex-col justify-center items-center">
+      <div className="w-full justify-center flex flex-row">
         {renderPiecePreview()}
-        <div className="ml-20 rotate-135">{renderGrid()}</div>
+        <div className="p-24 rotate-135">{renderGrid()}</div>
       </div>
-      <div className="w-full overflow-hidden bg-white shadow">
-        <ul role="list" className="flex flex-row flex-wrap divide-y divide-x divide-gray-200">
+      <div className="xl:absolute xl:bottom-0 xl:w-10/12 overflow-hidden bg-white outline-2 rounded-md">
+        <h3 className="font-medium mb-2">Available Pieces</h3>
+        <ul role="list" className="relative justify-center flex flex-row flex-wrap divide-y divide-x divide-gray-200">
           {pieces
-            .filter((piece) => !piece.placed)
+            .filter((piece) => !piece.placed && piece.id !== selectedPiece.id)
             .map((piece) => (
               <li
                 key={piece.color}
-                className="px-6 py-4"
+                className="px-6"
                 onClick={() => setSelectedPiece(piece)}
               >
-                {createPreviewGridForPiece(piece)}
+                {createPreviewGridForPiece(piece, 6)}
               </li>
           ))}
         </ul>
