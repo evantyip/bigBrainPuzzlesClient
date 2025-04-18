@@ -126,29 +126,16 @@ function RouteComponent() {
     if (!canPlacePiece(rowIndex, colIndex, selectedPiece)) return;
 
     const newGrid = grid.map((row) => [...row]);
-    const piece = selectedPiece;
 
-    for (const [relRow, relCol] of piece.shape) {
+    for (const [relRow, relCol] of selectedPiece.shape) {
       const newRow = rowIndex + relRow;
       const newCol = colIndex + relCol;
       newGrid[newRow][newCol] = selectedPiece;
     }
 
-    const newPieces = pieces.map((piece) => {
-      if (piece.id == selectedPiece.id) {
-        piece.placed = true;
-      }
+    const newPieces = pieces.filter((piece) => piece.id !== selectedPiece.id);
 
-      return piece;
-    });
-
-    for (const p of newPieces) {
-      if (p.placed == false) {
-        setSelectedPiece(p);
-        break;
-      }
-    }
-
+    setSelectedPiece(newPieces[0]);
     setPieces(newPieces);
     setGrid(newGrid);
   };
@@ -249,7 +236,7 @@ function RouteComponent() {
         <h3 className="font-medium mb-2">Available Pieces</h3>
         <ul role="list" className="relative justify-center flex flex-row flex-wrap divide-y divide-x divide-gray-200">
           {pieces
-            .filter((piece) => !piece.placed && piece.id !== selectedPiece.id)
+            .filter((piece) => piece.id !== selectedPiece.id)
             .map((piece) => (
               <li
                 key={piece.color}
