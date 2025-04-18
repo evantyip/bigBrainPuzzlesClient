@@ -357,11 +357,44 @@ function RouteComponent() {
     )
   };
 
+  const renderPiecePreview = () => {
+    return (
+      <div className="p-4 border rounded-md">
+        <h3 className="text-lg font-medium mb-2">Current Piece</h3>
+        {createPreviewGridForPiece(selectedPiece)}
+        <div className="mt-10 flex gap-2">
+          <button
+            type="button"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={rotateSelectedPiece}
+          >
+            Rotate (R)
+          </button>
+          <button
+            type="button"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={flipXSelectedPiece}
+          >
+            Flip X (F)
+          </button>
+          <button
+            type="button"
+            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={flipYSelectedPiece}
+          >
+            Flip Y (G)
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col pt-40 justify-center items-center">
       <div className="overflow-hidden rounded-md bg-white shadow">
         <ul role="list" className="divide-y divide-gray-200">
           {pieces.map((item, index) => (
+      {renderPiecePreview()}
             <li
               key={item.color}
               className="px-6 py-4"
@@ -372,23 +405,6 @@ function RouteComponent() {
           ))}
         </ul>
       </div>
-      <div>
-        <button
-          type="button"
-          className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          onClick={rotateSelectedPiece}
-        >
-          Rotate
-        </button>
-        <button
-          type="button"
-          className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          onClick={flipXSelectedPiece}
-        >
-          Flip
-        </button>
-      </div>
-      <div className="mt-20 pt-44 rotate-135">{renderGrid()}</div>
     </div>
   );
 }
