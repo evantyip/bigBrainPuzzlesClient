@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState, useCallback } from "react";
 import { PUZZLE_PIECES, createGrid, createPreviewGridForPiece } from "@/utils/puzzlePieces";
 import { levels } from "@/levels/levels";
@@ -19,6 +19,7 @@ function RouteComponent() {
     ...PUZZLE_PIECES,
   ]);
   const [selectedPiece, setSelectedPiece] = useState<PuzzlePiece>(pieces[0]);
+  const [placedPieces, setPlacedPieces] = useState<PuzzlePiece[]>([]);
 
   const transformSelectedPiece = useCallback((transformation: string) => {
     const newPieces = [...pieces].map((piece) => {
@@ -56,19 +57,7 @@ function RouteComponent() {
   }, [pieces, selectedPiece, setPieces, setSelectedPiece]);
 
   useEffect(() => {
-    const usedPieces = new Set();
-
-    for (const row of grid) {
-      for (const col of row) {
-        if (col.id !== -1) {
-          usedPieces.add(col.id);
-        }
-      }
-    }
-
-    const remainingPieces = [...pieces].filter((piece) => !usedPieces.has(piece.id));
-    setPieces(remainingPieces);
-    setSelectedPiece(remainingPieces[0]);
+    resetGrid();
   }, []);
 
   useEffect(() => {
@@ -134,7 +123,9 @@ function RouteComponent() {
     }
 
     const newPieces = pieces.filter((piece) => piece.id !== selectedPiece.id);
+    const newPlacedPieces = [...placedPieces, selectedPiece]
 
+    setPlacedPieces(newPlacedPieces);
     setSelectedPiece(newPieces[0]);
     setPieces(newPieces);
     setGrid(newGrid);
@@ -226,8 +217,80 @@ function RouteComponent() {
     );
   };
 
+  const resetGrid = () => {
+    const usedPieces = new Set();
+
+    for (const row of level) {
+      for (const col of row) {
+        if (col.id !== -1) {
+          usedPieces.add(col.id);
+        }
+      }
+    }
+
+    const remainingPieces = [...PUZZLE_PIECES].filter((piece) => !usedPieces.has(piece.id));
+    setPlacedPieces([]);
+    setGrid(level);
+    setPieces(remainingPieces);
+    setSelectedPiece(remainingPieces[0]);
+  };
+
+  const undoLastPiecePlaced = () => {
+    if (placedPieces.length === 0) {
+      return
+    }
+
+    const newPlacedPieces = [...placedPieces];
+    const lastPiecePlaced = newPlacedPieces.pop() as PuzzlePiece;
+    const newGrid = [...grid];
+    const newPieces = [...pieces, lastPiecePlaced];
+
+    for (let row = 0; row < newGrid.length; row++) {
+      for (let col = 0; col < newGrid[row].length; col++) {
+        if (newGrid[row][col].id === lastPiecePlaced.id) {
+          newGrid[row][col] = {
+            id: -1,
+            shape: [],
+            color: "",
+            placed: false
+          }
+
+        }
+      }
+    }
+
+    setPlacedPieces(newPlacedPieces);
+    setSelectedPiece(lastPiecePlaced);
+    setGrid(newGrid);
+    setPieces(newPieces);
+  };
+
   return (
     <div className="static pt-10 flex flex-col justify-center items-center">
+      <div className="w-4/5 pb-6 flex flex-row justify-between">
+        <button
+          type="button"
+          className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          <Link to="/">Back to Levels</Link>
+        </button>
+        <div className="space-x-4">
+          <button
+            type="button"
+            className="rounded-md bg-indigo-50 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100"
+            onClick={undoLastPiecePlaced}
+          >
+            Undo
+          </button>
+          <button
+            type="button"
+            className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={resetGrid}
+          >
+            Reset Pieces
+          </button>
+        </div>
+      </div>
       <div className="w-full justify-center flex flex-row">
         {renderPiecePreview()}
         <div className="p-24 rotate-135">{renderGrid()}</div>
