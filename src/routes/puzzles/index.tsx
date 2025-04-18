@@ -17,10 +17,9 @@ const createGrid = (): number[][] => {
   return rows;
 };
 
-// Define the shape of a puzzle piece as arrays of relative coordinates
 const PUZZLE_PIECES = [
   {
-    color: "border-blue-500 bg-cyan-300",
+    color: "bg-cyan-300",
     shape: [
       [-1, 0],
       [0, 0],
@@ -30,7 +29,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-green-300",
+    color: "bg-green-300",
     shape: [
       [-1, 0],
       [0, 0],
@@ -40,7 +39,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-zinc-600",
+    color: "bg-zinc-600",
     shape: [
       [0, 0],
       [1, 0],
@@ -49,7 +48,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-orange-500",
+    color: "bg-orange-500",
     shape: [
       [0, 0],
       [1, 0],
@@ -59,7 +58,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-slate-200",
+    color: "bg-slate-200",
     shape: [
       [0, 0],
       [1, 0],
@@ -69,7 +68,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-purple-700",
+    color: "bg-purple-700",
     shape: [
       [0, 0],
       [-1, 0],
@@ -79,7 +78,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-green-800",
+    color: "bg-green-800",
     shape: [
       [0, 0],
       [-1, 0],
@@ -88,7 +87,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-yellow-300",
+    color: "bg-yellow-300",
     shape: [
       [0, 0],
       [-1, 0],
@@ -97,7 +96,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-red-600",
+    color: "bg-red-600",
     shape: [
       [0, 0],
       [-1, 0],
@@ -107,7 +106,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-rose-300",
+    color: "bg-rose-300",
     shape: [
       [0, 0],
       [-1, 0],
@@ -115,7 +114,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-blue-700",
+    color: "bg-blue-700",
     shape: [
       [0, 0],
       [-1, 0],
@@ -125,7 +124,7 @@ const PUZZLE_PIECES = [
     ],
   },
   {
-    color: "border-blue-500 bg-gray-800",
+    color: "bg-gray-800",
     shape: [
       [0, 0],
       [-1, 0],
