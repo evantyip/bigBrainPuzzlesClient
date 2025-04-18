@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
 import { PUZZLE_PIECES, createPreviewGridForPiece } from "@/utils/puzzlePieces";
+import { levelOne } from "@/levels/levels";
 import type { puzzlePiece } from "@/utils/puzzlePieces";
 
 export const Route = createFileRoute("/puzzles/")({
@@ -8,7 +9,7 @@ export const Route = createFileRoute("/puzzles/")({
 });
 
 function RouteComponent() {
-  const [grid, setGrid] = useState<puzzlePiece[][]>(createGrid());
+  const [grid, setGrid] = useState<puzzlePiece[][]>(levelOne);
   const [hoveredCell, setHoveredCell] = useState<number[] | null>(null);
   const [pieces, setPieces] = useState<puzzlePiece[]>([
     ...PUZZLE_PIECES,
@@ -49,6 +50,22 @@ function RouteComponent() {
       setSelectedPiece(updatedSelectedPiece);
     }
   }, [pieces, selectedPiece, setPieces, setSelectedPiece]);
+
+  useEffect(() => {
+    const usedPieces = new Set();
+
+    for (const row of grid) {
+      for (const col of row) {
+        if (col.id !== -1) {
+          usedPieces.add(col.id);
+        }
+      }
+    }
+
+    const remainingPieces = [...pieces].filter((piece) => !usedPieces.has(piece.id));
+    setPieces(remainingPieces);
+    setSelectedPiece(remainingPieces[0]);
+  }, []);
 
   useEffect(() => {
     const handleTransformKeys = (event: KeyboardEvent) => {
