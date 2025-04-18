@@ -208,7 +208,6 @@ function RouteComponent() {
     setRotationCounter((prev) => prev + 1);
   };
 
-  // Check if a piece can be placed at a given position
   const canPlacePiece = (
     rowIndex: number,
     colIndex: number,
@@ -239,26 +238,6 @@ function RouteComponent() {
     return true;
   };
 
-  const getPreviewPieceCells = (
-    rowIndex: number,
-    colIndex: number,
-  ): string[] => {
-    if (!canPlacePiece(rowIndex, colIndex, selectedPiece)) return [];
-
-    const previewCells = [];
-    const piece = pieces[selectedPiece];
-
-    for (const [relRow, relCol] of piece.shape) {
-      const newRow = rowIndex + relRow;
-      const newCol = colIndex + relCol;
-
-      previewCells.push(`${newRow}-${newCol}`);
-    }
-
-    return previewCells;
-  };
-
-  // Place a piece on the grid
   const placePiece = (
     rowIndex: number,
     colIndex: number,
@@ -278,6 +257,25 @@ function RouteComponent() {
     setGrid(newGrid);
   };
 
+  const getPreviewPieceCells = (
+    rowIndex: number,
+    colIndex: number,
+  ): string[] => {
+    if (!canPlacePiece(rowIndex, colIndex, selectedPiece)) return [];
+
+    const previewCells = [];
+    const piece = pieces[selectedPiece];
+
+    for (const [relRow, relCol] of piece.shape) {
+      const newRow = rowIndex + relRow;
+      const newCol = colIndex + relCol;
+
+      previewCells.push(`${newRow}-${newCol}`);
+    }
+
+    return previewCells;
+  };
+
   const renderGrid = () => {
     const previewCells = hoveredCell
       ? getPreviewPieceCells(hoveredCell[0], hoveredCell[1])
@@ -293,8 +291,6 @@ function RouteComponent() {
           cellClass = pieces[rowElement].color;
         } else if (isPreview) {
           cellClass = pieces[selectedPiece].color;
-        } else {
-          cellClass = "border-blue-500";
         }
 
         return (
@@ -304,9 +300,7 @@ function RouteComponent() {
             onClick={() => placePiece(i, j, selectedPiece)}
             onMouseEnter={() => setHoveredCell([i, j])}
             onMouseLeave={() => setHoveredCell(null)}
-          >
-            {`${i}-${j}`}
-          </div>
+          />
         );
       });
 
