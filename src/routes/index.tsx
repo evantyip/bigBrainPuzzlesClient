@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Route as puzzleRoute } from './puzzles'
-import logo from '../logo.svg'
 import '../App.css'
+import { levels } from '@/levels/levels'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -9,32 +8,12 @@ export const Route = createFileRoute('/')({
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
-        </p>
-        <p>
-          Hello world
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="App-link"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
+    <div className="flex flex-col justify-center">
+      {Object.keys(levels).map((key) => (
+        <Link key={key} to="/puzzles/$puzzleId" params={{ puzzleId: Number(key) }}>
+          Level {key}
+        </Link>
+      ))}
     </div>
   )
 }
