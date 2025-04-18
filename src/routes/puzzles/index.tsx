@@ -1,25 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export const Route = createFileRoute("/puzzles/")({
   component: RouteComponent,
 });
 
-const createGrid = (numRows: number = 10): number[][] => {
+type puzzlePiece = {
+  id: number;
+  color: string;
+  placed: boolean;
+  shape: number[][];
+}
+
+const createGrid = (numRows: number = 10): puzzlePiece[][] => {
   let rows = [];
   for (let i = numRows; i > 0; i--) {
     const rowElements = [];
     for (let j = 0; j < i; j++) {
-      rowElements.push(-1);
+      rowElements.push({id: -1} as puzzlePiece);
     }
     rows.unshift(rowElements);
   }
   return rows;
 };
 
-const PUZZLE_PIECES = [
+const PUZZLE_PIECES: puzzlePiece[] = [
   {
+    id: 1,
     color: "bg-cyan-300",
+    placed: false,
     shape: [
       [-1, 0],
       [0, 0],
@@ -29,7 +38,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 2,
     color: "bg-green-300",
+    placed: false,
     shape: [
       [-1, 0],
       [0, 0],
@@ -39,7 +50,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 3,
     color: "bg-zinc-600",
+    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -48,7 +61,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 4,
     color: "bg-orange-500",
+    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -58,7 +73,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 5,
     color: "bg-slate-200",
+    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -68,7 +85,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 6,
     color: "bg-purple-700",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -78,7 +97,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 7,
     color: "bg-green-800",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -87,7 +108,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 8,
     color: "bg-yellow-300",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -96,7 +119,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 9,
     color: "bg-red-600",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -106,7 +131,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 10,
     color: "bg-rose-300",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -114,7 +141,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 11,
     color: "bg-blue-700",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -124,7 +153,9 @@ const PUZZLE_PIECES = [
     ],
   },
   {
+    id: 12,
     color: "bg-gray-800",
+    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -136,85 +167,73 @@ const PUZZLE_PIECES = [
 ];
 
 function RouteComponent() {
-  const [grid, setGrid] = useState<number[][]>(createGrid());
-  const [selectedPiece, setSelectedPiece] = useState<number>(
-    PUZZLE_PIECES.length - 1,
-  );
+  const [grid, setGrid] = useState<puzzlePiece[][]>(createGrid());
   const [hoveredCell, setHoveredCell] = useState<number[] | null>(null);
-  const [rotationCounter, setRotationCounter] = useState<number>(0);
-  const [pieces, setPieces] = useState<typeof PUZZLE_PIECES>([
+  const [pieces, setPieces] = useState<puzzlePiece[]>([
     ...PUZZLE_PIECES,
   ]);
+  const [selectedPiece, setSelectedPiece] = useState<puzzlePiece>(pieces[0]);
+
+  const transformSelectedPiece = useCallback((transformation: string) => {
+    const newPieces = [...pieces].map((piece) => {
+      if (piece.id == selectedPiece.id) {
+        let newShape;
+        switch(transformation) {
+          case "rotate":
+            newShape = piece.shape.map(([row, col]) => [col, -row]);
+            break;
+          case "flipX":
+            newShape = piece.shape.map(([row, col]) => [-row, col]);
+            break;
+          case "flipY":
+            newShape = piece.shape.map(([row, col]) => [row, -col]);
+            break;
+          default:
+            newShape = piece.shape;
+        }
+
+        const newSelectedPiece = {
+          ...piece,
+          shape: newShape,
+        };
+        return newSelectedPiece;
+      }
+      return piece;
+    });
+
+    setPieces(newPieces);
+
+    const updatedSelectedPiece = newPieces.find(p => p.id === selectedPiece.id);
+    if (updatedSelectedPiece) {
+      setSelectedPiece(updatedSelectedPiece);
+    }
+  }, [pieces, selectedPiece, setPieces, setSelectedPiece]);
 
   useEffect(() => {
-    const handleRotateKey = (event: KeyboardEvent) => {
+    const handleTransformKeys = (event: KeyboardEvent) => {
       if (event.key === "r") {
-        rotateSelectedPiece();
+        transformSelectedPiece("rotate");
       }
-    };
-    const handleFlipKey = (event: KeyboardEvent) => {
       if (event.key === "f") {
-        flipXSelectedPiece();
+        transformSelectedPiece("flipX");
       }
-    };
-    const handleFlipYKey = (event: KeyboardEvent) => {
       if (event.key === "g") {
-        flipYSelectedPiece();
+        transformSelectedPiece("flipY");
       }
     };
 
-    window.addEventListener("keydown", handleRotateKey);
-    window.addEventListener("keydown", handleFlipKey);
-    window.addEventListener("keydown", handleFlipYKey);
+    window.addEventListener("keydown", handleTransformKeys);
 
-    // Clean up
     return () => {
-      window.removeEventListener("keydown", handleRotateKey);
-      window.removeEventListener("keydown", handleFlipKey);
-      window.removeEventListener("keydown", handleFlipYKey);
+      window.removeEventListener("keydown", handleTransformKeys);
     };
-  }, [selectedPiece, rotationCounter]);
-
-  const rotateSelectedPiece = () => {
-    const newPieces = [...pieces];
-    newPieces[selectedPiece] = {
-      ...newPieces[selectedPiece],
-      shape: (newPieces[selectedPiece].shape).map(([row, col]) => [col, -row]),
-    };
-
-    setPieces(newPieces);
-    setRotationCounter((prev) => prev + 1);
-  };
-
-  const flipXSelectedPiece = () => {
-    const newPieces = [...pieces];
-    newPieces[selectedPiece] = {
-      ...newPieces[selectedPiece],
-      shape: (newPieces[selectedPiece].shape).map(([row, col]) => [-row, col]),
-    };
-
-    setPieces(newPieces);
-    setRotationCounter((prev) => prev + 1);
-  };
-
-  const flipYSelectedPiece = () => {
-    const newPieces = [...pieces];
-    newPieces[selectedPiece] = {
-      ...newPieces[selectedPiece],
-      shape: (newPieces[selectedPiece].shape).map(([row, col]) => [row, -col]),
-    };
-
-    setPieces(newPieces);
-    setRotationCounter((prev) => prev + 1);
-  };
+  }, [transformSelectedPiece]); // Now we only need transformSelectedPiece
 
   const canPlacePiece = (
     rowIndex: number,
     colIndex: number,
-    pieceIndex: number,
+    piece: puzzlePiece,
   ) => {
-    const piece = pieces[pieceIndex];
-
     for (const [relRow, relCol] of piece.shape) {
       const newRow = rowIndex + relRow;
       const newCol = colIndex + relCol;
@@ -230,7 +249,7 @@ function RouteComponent() {
       }
 
       // Check if the cell is already filled
-      if (grid[newRow][newCol] !== -1) {
+      if (grid[newRow][newCol].id !== -1) {
         return false;
       }
     }
@@ -241,19 +260,34 @@ function RouteComponent() {
   const placePiece = (
     rowIndex: number,
     colIndex: number,
-    puzzleIndex: number,
   ) => {
     if (!canPlacePiece(rowIndex, colIndex, selectedPiece)) return;
 
     const newGrid = grid.map((row) => [...row]);
-    const piece = pieces[selectedPiece];
+    const piece = selectedPiece;
 
     for (const [relRow, relCol] of piece.shape) {
       const newRow = rowIndex + relRow;
       const newCol = colIndex + relCol;
-      newGrid[newRow][newCol] = puzzleIndex;
+      newGrid[newRow][newCol] = selectedPiece;
     }
 
+    const newPieces = pieces.map((piece) => {
+      if (piece.id == selectedPiece.id) {
+        piece.placed = true;
+      }
+
+      return piece;
+    });
+
+    for (const p of newPieces) {
+      if (p.placed == false) {
+        setSelectedPiece(p);
+        break;
+      }
+    }
+
+    setPieces(newPieces);
     setGrid(newGrid);
   };
 
@@ -264,9 +298,8 @@ function RouteComponent() {
     if (!canPlacePiece(rowIndex, colIndex, selectedPiece)) return [];
 
     const previewCells = [];
-    const piece = pieces[selectedPiece];
 
-    for (const [relRow, relCol] of piece.shape) {
+    for (const [relRow, relCol] of selectedPiece.shape) {
       const newRow = rowIndex + relRow;
       const newCol = colIndex + relCol;
 
@@ -281,23 +314,23 @@ function RouteComponent() {
       ? getPreviewPieceCells(hoveredCell[0], hoveredCell[1])
       : [];
 
-    return grid.map((row: number[], i: number) => {
-      const rowElements = row.map((rowElement: number, j: number) => {
+    return grid.map((row: puzzlePiece[], i: number) => {
+      const rowElements = row.map((rowElement: puzzlePiece, j: number) => {
         const isPreview = previewCells.includes(`${i}-${j}`);
-        const isFilled = rowElement !== -1;
+        const isFilled = rowElement.id !== -1;
 
         let cellClass = "";
         if (isFilled) {
-          cellClass = pieces[rowElement].color;
+          cellClass = rowElement.color;
         } else if (isPreview) {
-          cellClass = pieces[selectedPiece].color;
+          cellClass = selectedPiece.color;
         }
 
         return (
           <div
             key={`circle-${i}-${j}`}
             className={`w-10 h-10 cursor-pointer m-1 rounded-full border-2 flex items-center justify-center ${cellClass}`}
-            onClick={() => placePiece(i, j, selectedPiece)}
+            onClick={() => placePiece(i, j)}
             onMouseEnter={() => setHoveredCell([i, j])}
             onMouseLeave={() => setHoveredCell(null)}
           />
@@ -312,11 +345,9 @@ function RouteComponent() {
     });
   };
 
-  const createPreviewGridForPiece = (pieceNumber: number) => {
+  const createPreviewGridForPiece = (piece: puzzlePiece) => {
     // Create an empty 5x5 grid for the preview
-    const previewGrid = Array(5).fill(0).map(() => Array(5).fill(-1));
-
-    const piece = pieces[pieceNumber];
+    const previewGrid = Array(5).fill(0).map(() => Array(5).fill({id: -1} as puzzlePiece));
 
     // Center the piece with row offset
     const rowOffset = 2;
@@ -328,7 +359,7 @@ function RouteComponent() {
       const newCol = col + colOffset;
 
       if (newRow >= 0 && newRow < 5 && newCol >= 0 && newCol < 5) {
-        previewGrid[newRow][newCol] = pieceNumber;
+        previewGrid[newRow][newCol] = piece;
       }
     });
 
@@ -340,7 +371,7 @@ function RouteComponent() {
               <div
                 key={`piece-preview-${i}-${j}`}
                 className={`w-10 h-10 m-1 rounded-full flex items-center justify-center ${
-                  cell !== -1 ? pieces[cell].color : ""
+                  cell.id !== -1 ? cell.color : ""
                 }`}
               >
               </div>
@@ -360,21 +391,21 @@ function RouteComponent() {
           <button
             type="button"
             className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={rotateSelectedPiece}
+            onClick={() => transformSelectedPiece('rotate')}
           >
             Rotate (R)
           </button>
           <button
             type="button"
             className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={flipXSelectedPiece}
+            onClick={() => transformSelectedPiece('flipX')}
           >
             Flip X (F)
           </button>
           <button
             type="button"
             className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={flipYSelectedPiece}
+            onClick={() => transformSelectedPiece('flipY')}
           >
             Flip Y (G)
           </button>
@@ -385,18 +416,22 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col pt-40 justify-center items-center">
-      {renderPiecePreview()}
-      <div className="mt-20 pt-44 rotate-135">{renderGrid()}</div>
+      <div className="flex flex-row">
+        {renderPiecePreview()}
+        <div className="ml-20 rotate-135">{renderGrid()}</div>
+      </div>
       <div className="w-full overflow-hidden bg-white shadow">
         <ul role="list" className="flex flex-row flex-wrap divide-y divide-x divide-gray-200">
-          {pieces.map((piece, index) => (
-            <li
-              key={piece.color}
-              className="px-6 py-4"
-              onClick={() => setSelectedPiece(index)}
-            >
-              {createPreviewGridForPiece(index)}
-            </li>
+          {pieces
+            .filter((piece) => !piece.placed)
+            .map((piece) => (
+              <li
+                key={piece.color}
+                className="px-6 py-4"
+                onClick={() => setSelectedPiece(piece)}
+              >
+                {createPreviewGridForPiece(piece)}
+              </li>
           ))}
         </ul>
       </div>
