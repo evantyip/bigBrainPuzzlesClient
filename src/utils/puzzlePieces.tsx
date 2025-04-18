@@ -184,6 +184,11 @@ export const createPreviewGridForPiece = (piece: PuzzlePiece, size: number = 10)
     }
   });
 
+  const sizeClasses: { [key: number]: string } = {
+    6: "w-6 h-6",
+    10: "w-10 h-10",
+  };
+
   return (
     <div className="rotate-135">
       {previewGrid.map((row, i) => (
@@ -191,7 +196,7 @@ export const createPreviewGridForPiece = (piece: PuzzlePiece, size: number = 10)
           {row.map((cell, j) => (
             <div
               key={`piece-preview-${i}-${j}`}
-              className={`w-${size} h-${size} m-1 rounded-full flex items-center justify-center ${
+              className={`${sizeClasses[size]} m-1 rounded-full flex items-center justify-center ${
                 cell.id !== -1 ? cell.color : ""
               }`}
             >
