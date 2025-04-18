@@ -1,11 +1,11 @@
-export type puzzlePiece = {
+export type PuzzlePiece = {
   id: number;
   color: string;
   placed: boolean;
   shape: number[][];
 }
 
-export const PUZZLE_PIECES: puzzlePiece[] = [
+export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 1,
     color: "bg-cyan-300",
@@ -147,7 +147,7 @@ export const PUZZLE_PIECES: puzzlePiece[] = [
   },
 ];
 
-export const createGrid = (numRows: number = 10): puzzlePiece[][] => {
+export const createGrid = (numRows: number = 10): PuzzlePiece[][] => {
   let rows = [];
   for (let i = numRows; i > 0; i--) {
     const rowElements = [];
@@ -166,9 +166,9 @@ export const createGrid = (numRows: number = 10): puzzlePiece[][] => {
   return rows;
 };
 
-export const createPreviewGridForPiece = (piece: puzzlePiece, size: number = 10) => {
+export const createPreviewGridForPiece = (piece: PuzzlePiece, size: number = 10) => {
   // Create an empty 5x5 grid for the preview
-  const previewGrid = Array(5).fill(0).map(() => Array(5).fill({id: -1} as puzzlePiece));
+  const previewGrid = Array(5).fill(0).map(() => Array(5).fill({id: -1} as PuzzlePiece));
 
   // Center the piece with row offset
   const rowOffset = 2;

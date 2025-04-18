@@ -1,6 +1,6 @@
-import type { puzzlePiece } from "@/utils/puzzlePieces"
+import type { PuzzlePiece } from "@/utils/puzzlePieces"
 
-export const levelOne: puzzlePiece[][] = [
+const levelOne: PuzzlePiece[][] = [
     [
         {
             "id": -1,
@@ -1052,3 +1052,9 @@ export const levelOne: puzzlePiece[][] = [
         }
     ]
 ]
+
+type PuzzleLevel = PuzzlePiece[][];
+
+export const levels: { [key: number]: PuzzleLevel } = {
+    1: levelOne
+};
