@@ -5,9 +5,9 @@ export const Route = createFileRoute("/puzzles/")({
   component: RouteComponent,
 });
 
-const createGrid = (): number[][] => {
+const createGrid = (numRows: number = 10): number[][] => {
   let rows = [];
-  for (let i = 10; i > 0; i--) {
+  for (let i = numRows; i > 0; i--) {
     const rowElements = [];
     for (let j = 0; j < i; j++) {
       rowElements.push(-1);
