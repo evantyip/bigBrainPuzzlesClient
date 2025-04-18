@@ -391,16 +391,17 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col pt-40 justify-center items-center">
-      <div className="overflow-hidden rounded-md bg-white shadow">
-        <ul role="list" className="divide-y divide-gray-200">
-          {pieces.map((item, index) => (
       {renderPiecePreview()}
+      <div className="mt-20 pt-44 rotate-135">{renderGrid()}</div>
+      <div className="w-full overflow-hidden bg-white shadow">
+        <ul role="list" className="flex flex-row flex-wrap divide-y divide-x divide-gray-200">
+          {pieces.map((piece, index) => (
             <li
-              key={item.color}
+              key={piece.color}
               className="px-6 py-4"
               onClick={() => setSelectedPiece(index)}
             >
-              {item.color}
+              {createPreviewGridForPiece(index)}
             </li>
           ))}
         </ul>
