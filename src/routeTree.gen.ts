@@ -12,7 +12,6 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as PuzzlesIndexImport } from './routes/puzzles/index'
 import { Route as PuzzlesPuzzleIdImport } from './routes/puzzles/$puzzleId'
 
 // Create/Update Routes
@@ -20,12 +19,6 @@ import { Route as PuzzlesPuzzleIdImport } from './routes/puzzles/$puzzleId'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PuzzlesIndexRoute = PuzzlesIndexImport.update({
-  id: '/puzzles/',
-  path: '/puzzles/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,13 +46,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PuzzlesPuzzleIdImport
       parentRoute: typeof rootRoute
     }
-    '/puzzles/': {
-      id: '/puzzles/'
-      path: '/puzzles'
-      fullPath: '/puzzles'
-      preLoaderRoute: typeof PuzzlesIndexImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -68,41 +54,36 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/puzzles/$puzzleId': typeof PuzzlesPuzzleIdRoute
-  '/puzzles': typeof PuzzlesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/puzzles/$puzzleId': typeof PuzzlesPuzzleIdRoute
-  '/puzzles': typeof PuzzlesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/puzzles/$puzzleId': typeof PuzzlesPuzzleIdRoute
-  '/puzzles/': typeof PuzzlesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/puzzles/$puzzleId' | '/puzzles'
+  fullPaths: '/' | '/puzzles/$puzzleId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/puzzles/$puzzleId' | '/puzzles'
-  id: '__root__' | '/' | '/puzzles/$puzzleId' | '/puzzles/'
+  to: '/' | '/puzzles/$puzzleId'
+  id: '__root__' | '/' | '/puzzles/$puzzleId'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PuzzlesPuzzleIdRoute: typeof PuzzlesPuzzleIdRoute
-  PuzzlesIndexRoute: typeof PuzzlesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PuzzlesPuzzleIdRoute: PuzzlesPuzzleIdRoute,
-  PuzzlesIndexRoute: PuzzlesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -116,8 +97,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/puzzles/$puzzleId",
-        "/puzzles/"
+        "/puzzles/$puzzleId"
       ]
     },
     "/": {
@@ -125,9 +105,6 @@ export const routeTree = rootRoute
     },
     "/puzzles/$puzzleId": {
       "filePath": "puzzles/$puzzleId.tsx"
-    },
-    "/puzzles/": {
-      "filePath": "puzzles/index.tsx"
     }
   }
 }
