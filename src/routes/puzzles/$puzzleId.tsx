@@ -255,8 +255,7 @@ function RouteComponent() {
           newGrid[row][col] = {
             id: -1,
             shape: [],
-            color: "",
-            placed: false
+            color: ""
           }
 
         }

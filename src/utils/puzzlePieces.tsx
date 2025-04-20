@@ -1,7 +1,6 @@
 export type PuzzlePiece = {
   id: number;
   color: string;
-  placed: boolean;
   shape: number[][];
 }
 
@@ -9,7 +8,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 1,
     color: "bg-cyan-300",
-    placed: false,
     shape: [
       [-1, 0],
       [0, 0],
@@ -21,7 +19,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 2,
     color: "bg-green-300",
-    placed: false,
     shape: [
       [-1, 0],
       [0, 0],
@@ -33,7 +30,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 3,
     color: "bg-zinc-600",
-    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -44,7 +40,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 4,
     color: "bg-orange-500",
-    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -56,7 +51,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 5,
     color: "bg-slate-200",
-    placed: false,
     shape: [
       [0, 0],
       [1, 0],
@@ -68,7 +62,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 6,
     color: "bg-purple-700",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -80,7 +73,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 7,
     color: "bg-green-800",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -91,7 +83,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 8,
     color: "bg-yellow-300",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -102,7 +93,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 9,
     color: "bg-red-600",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -114,7 +104,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 10,
     color: "bg-rose-300",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -124,7 +113,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 11,
     color: "bg-blue-700",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
@@ -136,7 +124,6 @@ export const PUZZLE_PIECES: PuzzlePiece[] = [
   {
     id: 12,
     color: "bg-gray-800",
-    placed: false,
     shape: [
       [0, 0],
       [-1, 0],
